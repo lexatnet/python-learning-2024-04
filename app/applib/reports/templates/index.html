@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Список отчётов{% endblock %}
+{% block header %}
+    Здесь представлены все требуемые отчёты перейдите на необходимый вам
+{% endblock %}
+{% block main %}
+{% from 'macros/list.html' import list %}
+    {{ list([1,2,3]) }}
+
+    <ul>
+    {% for report in reports %}
+      <li>
+        <a href="{{report['url']}}">
+            {{report['title']}}
+        </a>
+      </li>
+    {% endfor %}
+    </ul>
+    
+{% endblock %}
