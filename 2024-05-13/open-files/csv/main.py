@@ -1,7 +1,22 @@
-import pandas as pd
+# import pandas as pd
 
-origin_data = pd.read_csv('data.csv')
+# origin_data = pd.read_csv('data.csv')
 
-data = origin_data.set_index('index')
+# data = origin_data.set_index('index')
 
-print(data.head())
+# print(origin_data.head())
+# print(data.head())
+
+
+
+class Obj:
+    def __init__(self):
+      self.data = None
+
+obj = Obj()
+import copy
+setattr(obj, "data", "a")
+link = copy.copy(obj)
+setattr(link, "data", "b")
+
+print(obj.data)

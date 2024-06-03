@@ -16,11 +16,11 @@ data2 = pd.DataFrame(
         ['k2','A2', 'C2', 'D2'],
         ['k3','A3', 'C3', 'D3'],
     ],
-    columns=['key2','A', 'C', 'D']
+    columns=['key2','Aa', 'C', 'D']
 )
 
 concatenated_data = pd.concat([data1, data2])
 
 print(concatenated_data)
-print(concatenated_data.reset_index())
+# print(concatenated_data.reset_index())
 print(concatenated_data.reset_index().drop(columns=['index']))

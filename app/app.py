@@ -5,6 +5,16 @@ import pandas as pd
 from applib.args import args
 from applib.utils import prepare_data
 from applib.reports import create_reports
+from applib.logging import setup_logger
+import logging
+
+setup_logger(level=args.logging_level.to_logging_level())
+
+logger = logging.getLogger(__name__)
+
+logger.error("error info")
+logger.info("info info")
+logger.debug("debug info")
 
 if Path(args.output).exists():
     if args.force:
@@ -19,3 +29,4 @@ prepared_data = prepare_data(data)
 create_reports(data=prepared_data, destination=args.output)
 
 # python app.py "/home/aromanov/tmp/Учебные_данные_февраль_апрель_обезличены.xlsx" "Лист2" "/home/aromanov/tmp/reports"
+# python .\app.py "c:\Users\user\Downloads\Учебные_данные_февраль_апрель_обезличены.xlsx" "Лист2" "c:\Users\user\Desktop\report" --log debug --force

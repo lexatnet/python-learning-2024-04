@@ -19,6 +19,6 @@ data2 = pd.DataFrame(
     columns=['key2', 'C', 'D']
 )
 
-merged_data = data1.merge(data2, left_on='key1', right_on='key2', how='outer')
+merged_data = data1.merge(data2, left_on='key1', right_on='key2', how='left')
 
 print(merged_data)

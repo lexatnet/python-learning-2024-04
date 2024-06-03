@@ -38,6 +38,6 @@ def prepare_data(data):
         if data2[data2[col].notnull()].empty:
             data2 = data2.drop(columns=[col])
 
-    print(data2.head())
+    # print(data2.head())
 
     return data2
