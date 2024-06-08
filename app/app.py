@@ -5,16 +5,13 @@ import pandas as pd
 from applib.args import args
 from applib.utils import prepare_data
 from applib.reports import create_reports
+
 from applib.logging import setup_logger
 import logging
 
 setup_logger(level=args.logging_level.to_logging_level())
 
 logger = logging.getLogger(__name__)
-
-logger.error("error info")
-logger.info("info info")
-logger.debug("debug info")
 
 if Path(args.output).exists():
     if args.force:

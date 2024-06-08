@@ -9,6 +9,8 @@ class BaseReport(ABC):
 
     FILES_SUBFOLDER = "files"
 
+    FILE_NAMES = dict()
+
     def __init__(self, data: DataFrame, template_name, root_path, index="index.html"):
         self.index = index
         self.src_data = data
