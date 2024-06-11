@@ -2,7 +2,7 @@
 {% block title %}Отчёт 0{% endblock %}
 {% block header %}какая-то уточняющая информация{% endblock %}
 {% block main %}
-<img src="{{request_entrance_channel}}" alt="">
-<img src="{{entrance_classification}}" alt="">
-<img src="{{service_request}}" alt="">
+    {% for report_part in report_parts %}
+    <img src="{{report.image_path}}" alt="">
+    {% endfor %}
 {% endblock %}

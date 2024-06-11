@@ -8,6 +8,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 DiagramConfig = namedtuple("DiagramConfig", ["column", "diagram_title", "file_key"])
+ReportPart = namedtuple("ReportPart", ["image_path","title"])
 
 class FrequencyParametersOfProcess(BaseReport):
     FILE_NAMES = {
@@ -87,27 +88,50 @@ class FrequencyParametersOfProcess(BaseReport):
         data = (
             data
             .groupby(by=src_columns, dropna=False)
-            .count()
+            .size()
+            .unstack()
         )
+        print('pepared',data.head())
+        print('-'*20)
 
-        print('grouped', data.head())
-        data = data.unstack()
-        print(data.head())
+        
+        # fig, ax = plt.subplots()
+        # # bottom = np.zeros(3)
+
+        for i, row in data.iterrows():
+            p = ax.bar(species, weight_count, width, label=boolean, bottom=bottom)
+            print( '-')
+            print( 'i' , type(i), i)
+            print( 'row' , type(row),  row)
+        
+        # for boolean, weight_count in weight_counts.items():
+        #     bottom += weight_count
+
+        # ax.set_title("Number of penguins with above average body mass")
+        # ax.legend(loc="upper right")
 
 
-    def get_context(self):
-        context = dict()
+        # data = data.unstack()
 
-        for diagram_config in self.FREQUENCY_DIAGRAMS:
-            context[diagram_config.file_key] = self.get_relative_file_path(
-                diagram_config.file_key
-            )
-            self.render_frequency_report_pie(
+    def generate_report_part(self, diagram_config):
+        self.render_frequency_report_pie(
                 filename=self.get_absolute_file_path(diagram_config.file_key),
                 column=diagram_config.column,
                 title = diagram_config.diagram_title
             )
+    
+        return ReportPart(
+            image_path=self.get_relative_file_path(
+                diagram_config.file_key
+            ),
+            title=diagram_config.diagram_title
+        )
 
-        # context["mmm"] = self.get_relative_file_path("mmm")
-        # self.mmm(filename=self.get_absolute_file_path("mmm"))
+    def get_context(self):
+        context = dict()
+
+        # context['report_parts'] = [self.generate_report_part(diagram_config) for diagram_config in self.FREQUENCY_DIAGRAMS]
+
+        context["mmm"] = self.get_relative_file_path("mmm")
+        self.mmm(filename=self.get_absolute_file_path("mmm"))
         return context
