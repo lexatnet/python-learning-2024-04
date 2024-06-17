@@ -1,40 +1,84 @@
-from collections import namedtuple
-from .base_report import BaseReport
 import matplotlib.pyplot as plt
 from pathlib import Path
-import numpy as np
+from collections import namedtuple
+import pandas as pd
 import logging
+from enum import StrEnum, auto
+from applib.utils.select_params import select_params_with_defaults
+from .base_diagrams_report import DiagramConfig,  BaseDiagramReport
 
 logger = logging.getLogger(__name__)
 
-DiagramConfig = namedtuple("DiagramConfig", ["column", "diagram_title", "file_key"])
-ReportPart = namedtuple("ReportPart", ["image_path","title"])
+select_params = select_params_with_defaults(['title', 'filename'])
 
-class FrequencyParametersOfProcess(BaseReport):
-    FILE_NAMES = {
-        "request_entrance_channel": "request_entrance_channel.png",
-        "entrance_classification": "entrance_classification.png",
-        "service_request": "услуга.png",
-        "mmm": "mmm.png",
-    }
+class DiagramType(StrEnum):
+    PIE_FREQUENCY = auto()
+    STACK_FREQUENCY = auto()
 
-    FREQUENCY_DIAGRAMS = [
-        DiagramConfig(
-            column="Документ.Канал",
-            diagram_title="Канал поступления обращения",
-            file_key="request_entrance_channel",
-        ),
-        DiagramConfig(
-            column="Документ.Классификация",
-            diagram_title="Классификация обращения",
-            file_key="entrance_classification",
-        ),
-        DiagramConfig(
-            column="Документ.Услуга",
-            diagram_title="Услуга",
-            file_key="service_request",
-        ),
-    ]
+
+class FrequencyParametersOfProcess(BaseDiagramReport):
+    @property
+    def file_names(self):
+        return {
+            "request_entrance_channel": "request_entrance_channel.png",
+            "entrance_classification": "entrance_classification.png",
+            "service_request": "услуга.png",
+            "service_request_by_department": "service_request_by_department.png",
+            "service_request_classification_by_department": "service_request_classification_by_department.png",
+        }
+
+    @property
+    def diagrams_processors(self):
+        return {
+            DiagramType.PIE_FREQUENCY: self.render_frequency_report_pie,
+            DiagramType.STACK_FREQUENCY: self.stack_chart,
+        }
+
+    @property
+    def diagrams_configs(self):
+        return [
+            DiagramConfig(
+                type=DiagramType.PIE_FREQUENCY,
+                params={"column": "Документ.Канал"},
+                diagram_title="Канал поступления обращения",
+                file_key="request_entrance_channel",
+            ),
+            DiagramConfig(
+                type=DiagramType.PIE_FREQUENCY,
+                params={
+                    "column": "Документ.Классификация",
+                },
+                diagram_title="Классификация обращения",
+                file_key="entrance_classification",
+            ),
+            DiagramConfig(
+                type=DiagramType.PIE_FREQUENCY,
+                params={
+                    "column": "Документ.Услуга",
+                },
+                diagram_title="Услуга",
+                file_key="service_request",
+            ),
+            DiagramConfig(
+                type=DiagramType.STACK_FREQUENCY,
+                params={
+                    "columns": ["Документ.Инициатор.Организация", "Документ.Канал"],
+                },
+                diagram_title="Распределение каналов обращений по подразделениям",
+                file_key="service_request_by_department",
+            ),
+            DiagramConfig(
+                type=DiagramType.STACK_FREQUENCY,
+                params={
+                    "columns": [
+                        "Документ.Инициатор.Организация",
+                        "Документ.Классификация",
+                    ],
+                },
+                diagram_title="Распределение классификаций обращений по подразделениям",
+                file_key="service_request_classification_by_department",
+            ),
+        ]
 
     def pie_chart(self, data):
         logger.debug("подготовка секторной диаграммы")
@@ -50,15 +94,14 @@ class FrequencyParametersOfProcess(BaseReport):
         )
 
         return fig, ax
-    
-    
 
-    def render_frequency_report_pie(self, filename, column, title = 'Частотная диаграмма'):
-        logger.info(f"построете отчета анализа чатотного для {column}")
+    @select_params(["column"])
+    def render_frequency_report_pie(
+        self, filename, column, title="Частотная диаграмма"
+    ):
+        logger.info(f"Построение отчета анализа частотного для {column}")
         rows_total = self.src_data.shape[0]
-        data = self.src_data.groupby(
-            by=[column], dropna=False, as_index=False
-        ).count()
+        data = self.src_data.groupby(by=[column], dropna=False, as_index=False).count()
 
         percent = lambda v: (v / rows_total) * 100
 
@@ -77,61 +120,34 @@ class FrequencyParametersOfProcess(BaseReport):
         logger.debug(f"сохранение диаграммы в файл {filename}")
         fig.savefig(filename)
 
-    
-    def mmm(self, filename):
-        src_columns = ["Документ.Инициатор.Организация", "Документ.Канал"]
-
-        print(self.src_data.head())
-
-        data = self.strip_data_columns(src_columns)
-        print(data.head())
+    @select_params(["columns"])
+    def stack_chart(self, filename, columns, title="Стековая диаграмма"):
+        logger.info(f"Построение отчета анализа частотного для {columns}")
+        data = self.strip_data_columns(columns)
         data = (
-            data
-            .groupby(by=src_columns, dropna=False)
+            data.groupby(by=columns, dropna=False)
             .size()
             .unstack()
-        )
-        print('pepared',data.head())
-        print('-'*20)
-
-        
-        # fig, ax = plt.subplots()
-        # # bottom = np.zeros(3)
-
-        for i, row in data.iterrows():
-            p = ax.bar(species, weight_count, width, label=boolean, bottom=bottom)
-            print( '-')
-            print( 'i' , type(i), i)
-            print( 'row' , type(row),  row)
-        
-        # for boolean, weight_count in weight_counts.items():
-        #     bottom += weight_count
-
-        # ax.set_title("Number of penguins with above average body mass")
-        # ax.legend(loc="upper right")
-
-
-        # data = data.unstack()
-
-    def generate_report_part(self, diagram_config):
-        self.render_frequency_report_pie(
-                filename=self.get_absolute_file_path(diagram_config.file_key),
-                column=diagram_config.column,
-                title = diagram_config.diagram_title
-            )
-    
-        return ReportPart(
-            image_path=self.get_relative_file_path(
-                diagram_config.file_key
-            ),
-            title=diagram_config.diagram_title
+            .transpose()
+            .fillna(0)
+            .astype(int)
         )
 
-    def get_context(self):
-        context = dict()
+        fig, ax = plt.subplots()
+        logger.debug(f"всего на диаграмме должно быть {data.shape[1]} столбиков")
+        logger.debug(f"в стеке столбика может быть до {data.shape[0]} элементов")
 
-        # context['report_parts'] = [self.generate_report_part(diagram_config) for diagram_config in self.FREQUENCY_DIAGRAMS]
+        width = 0.5
+        bars_range = [str(i) for i in data.columns]
+        print("bars_range", list(bars_range))
+        bottom = pd.Series(0, index=data.columns)
+        print("bottom", bottom)
+        for index, row in data.iterrows():
+            ax.bar(bars_range, row, width, label=str(index), bottom=bottom)
+            bottom += row
 
-        context["mmm"] = self.get_relative_file_path("mmm")
-        self.mmm(filename=self.get_absolute_file_path("mmm"))
-        return context
+        ax.set_title(title)
+        ax.legend(loc="upper right")
+        Path(filename).parent.mkdir(parents=True, exist_ok=True)
+        logger.debug(f"сохранение диаграммы в файл {filename}")
+        fig.savefig(filename)

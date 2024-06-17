@@ -3,6 +3,6 @@
 {% block header %}какая-то уточняющая информация{% endblock %}
 {% block main %}
     {% for report_part in report_parts %}
-    <img src="{{report.image_path}}" alt="">
+    <img src="{{report_part.image_path}}" alt="">
     {% endfor %}
 {% endblock %}
