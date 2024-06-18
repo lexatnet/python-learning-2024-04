@@ -2,11 +2,16 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 def select_params(selected_params):
     params = set(selected_params)
     logger.debug(f"создание декоратора селектора параметров с полями {selected_params}")
+
     def dec(func):
-        logger.debug(f"декорирование функции селектором параметров с полями {selected_params}")
+        logger.debug(
+            f"декорирование функции селектором параметров с полями {selected_params}"
+        )
+
         def wrapper(*args, **kwargs):
             unused_params = set(kwargs.keys()) - params
             if len(unused_params) > 0:
@@ -21,9 +26,14 @@ def select_params(selected_params):
 
     return dec
 
+
 def select_params_with_defaults(default_params):
-    logger.debug(f"создание декоратора селектора параметров с полями по умолчанию {default_params}")
+    logger.debug(
+        f"создание декоратора селектора параметров с полями по умолчанию {default_params}"
+    )
+
     def wrapper(selected_params):
         params = set(default_params + selected_params)
         return select_params(params)
-    return wrapper 
+
+    return wrapper

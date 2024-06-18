@@ -11,6 +11,7 @@ DiagramConfig = namedtuple(
 
 ReportPart = namedtuple("ReportPart", ["image_path", "title"])
 
+
 class BaseDiagramReport(BaseReportWithArtifacts):
 
     @property

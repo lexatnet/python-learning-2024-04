@@ -6,6 +6,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class BaseReportWithArtifacts(BaseReport):
     """Базовый класс для всех отчётов"""
 

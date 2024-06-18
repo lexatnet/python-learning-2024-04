@@ -6,6 +6,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class BaseReport(ABC):
     """Базовый класс для всех отчётов"""
 
@@ -24,7 +25,7 @@ class BaseReport(ABC):
         pass
 
     def strip_data_columns(self, columns):
-        logger.debug(f'создание нового датафрейма из колонок {columns}')
+        logger.debug(f"создание нового датафрейма из колонок {columns}")
         return self.src_data.drop(
             columns=[col for col in self.src_data.columns if col not in columns]
         )

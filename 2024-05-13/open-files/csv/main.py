@@ -8,13 +8,14 @@
 # print(data.head())
 
 
-
 class Obj:
     def __init__(self):
-      self.data = None
+        self.data = None
+
 
 obj = Obj()
 import copy
+
 setattr(obj, "data", "a")
 link = copy.copy(obj)
 setattr(link, "data", "b")

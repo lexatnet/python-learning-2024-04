@@ -5,11 +5,12 @@ import pandas as pd
 import logging
 from enum import StrEnum, auto
 from applib.utils.select_params import select_params_with_defaults
-from .base_diagrams_report import DiagramConfig,  BaseDiagramReport
+from .base_diagrams_report import DiagramConfig, BaseDiagramReport
 
 logger = logging.getLogger(__name__)
 
-select_params = select_params_with_defaults(['title', 'filename'])
+select_params = select_params_with_defaults(["title", "filename"])
+
 
 class DiagramType(StrEnum):
     PIE_FREQUENCY = auto()

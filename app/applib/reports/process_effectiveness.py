@@ -7,7 +7,11 @@ import pandas as pd
 class DiagramType(StrEnum):
     PIE_FREQUENCY = auto()
 
-ReportPartitionConfig = namedtuple("ReportPartitionConfig", ["title", "handler", "params"])
+
+ReportPartitionConfig = namedtuple(
+    "ReportPartitionConfig", ["title", "handler", "params"]
+)
+
 
 class ProcessEffectiveness(BaseReport):
 
@@ -29,17 +33,27 @@ class ProcessEffectiveness(BaseReport):
             "Документ.Дата разрешения",
             "Документ.СЛА",
         ]
-        
+
         data = self.strip_data_columns(columns).drop_duplicates().dropna()
 
         print(data.head())
 
         datetime_format = "%d.%m.%Y %H:%M:%S"
-        data["Документ.Дата(Datetime)"] = pd.to_datetime(data["Документ.Дата"], format=datetime_format)
-        data["Документ.Дата разрешения(Datetime)"] = pd.to_datetime(data["Документ.Дата разрешения"], format=datetime_format)
-        data["Документ.СЛА(Datetime)"] = pd.to_datetime(data["Документ.СЛА"], format=datetime_format)
-        data["Нормированный срок обработки"] = data["Документ.СЛА(Datetime)"] - data["Документ.Дата(Datetime)"]
-        data["Фактический срок обработки"] = data["Документ.Дата разрешения(Datetime)"] - data["Документ.Дата(Datetime)"]
+        data["Документ.Дата(Datetime)"] = pd.to_datetime(
+            data["Документ.Дата"], format=datetime_format
+        )
+        data["Документ.Дата разрешения(Datetime)"] = pd.to_datetime(
+            data["Документ.Дата разрешения"], format=datetime_format
+        )
+        data["Документ.СЛА(Datetime)"] = pd.to_datetime(
+            data["Документ.СЛА"], format=datetime_format
+        )
+        data["Нормированный срок обработки"] = (
+            data["Документ.СЛА(Datetime)"] - data["Документ.Дата(Datetime)"]
+        )
+        data["Фактический срок обработки"] = (
+            data["Документ.Дата разрешения(Datetime)"] - data["Документ.Дата(Datetime)"]
+        )
         print(data.head())
 
         return None

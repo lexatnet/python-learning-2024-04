@@ -13,12 +13,14 @@ setup_logger(level=args.logging_level.to_logging_level())
 
 logger = logging.getLogger(__name__)
 
-# поверка на существование 
+logger.debug("поверка на существование директории куда будут сгенерированы отчёты")
 if Path(args.output).exists():
+    logger.debug("директория назначения сущетсвует")
     if args.force:
+        logger.debug("удаляем сущетвующую директорию для генерации новых отчетов в то же место")
         shutil.rmtree(args.output)
     else:
-        raise Exception("Destination folder already exist")
+        raise Exception("Директория указаная в качестве цельевой для генерации отчета уже сущетсвует.")
 
 # Для парсинга .xlsx файлов pandas использует openpyxl. Так что необходимо его установить прописав зависимости
 data = pd.read_excel(args.input, sheet_name=args.sheet)

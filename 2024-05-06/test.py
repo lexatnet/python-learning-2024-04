@@ -1,4 +1,5 @@
-x = 'external'
+x = "external"
+
 
 def f():
     count = 0
@@ -14,6 +15,7 @@ def f():
 
     return b, a
 
+
 b, a = f()
 
 print(a())
@@ -28,4 +30,3 @@ b()
 
 print(a())
 # c, d = f()
-
