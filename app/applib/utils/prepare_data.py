@@ -18,7 +18,7 @@ def prepare_data(data):
             logger.debug(f"сохраняем  {column} в {new_name}")
             return new_name
         
-        new_name = data1.at[0, column]
+        new_name = data1[column][0]
         if pd.notna(new_name) and str(column).startswith("Unnamed"):
             logger.debug(f"найдено имя {new_name}")
             return new_name

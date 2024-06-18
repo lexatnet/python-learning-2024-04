@@ -27,7 +27,3 @@ class BaseReportWithArtifacts(BaseReport):
     def get_absolute_file_path(self, key):
         return str(Path(self.root_path).joinpath(self.get_relative_file_path(key)))
 
-    def strip_data_columns(self, columns):
-        return self.src_data.drop(
-            columns=[col for col in self.src_data.columns if col not in columns]
-        )

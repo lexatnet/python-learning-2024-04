@@ -2,7 +2,7 @@ from .base_report import BaseReport
 from enum import StrEnum, auto
 from collections import namedtuple
 import pandas as pd
-
+from datetime import timedelta
 
 class DiagramType(StrEnum):
     PIE_FREQUENCY = auto()
@@ -55,6 +55,28 @@ class ProcessEffectiveness(BaseReport):
             data["Документ.Дата разрешения(Datetime)"] - data["Документ.Дата(Datetime)"]
         )
         print(data.head())
+
+        data["Просрочка"] = (
+            data["Документ.Дата разрешения(Datetime)"] - data["Документ.СЛА(Datetime)"]
+        )
+
+        print(data.head())
+
+        def criteria_1(row):
+            if row['Просрочка'].to_pytimedelta() < timedelta(0):
+                return "нет просрочки"
+            elif row['Просрочка'].to_pytimedelta() < timedelta(days=1):
+                return 'день'
+            elif timedelta(days=1) < row['Просрочка'].to_pytimedelta() < timedelta(weeks=1):
+                return 'неделя'
+            elif timedelta(days=7) < row['Просрочка'].to_pytimedelta() < timedelta(days=30):
+                return 'месяц'
+            return "большая"
+
+        data['Категория Просрочки'] = data.apply(criteria_1, axis='columns')
+        
+        res = data.groupby(by=['Категория Просрочки']).size()
+        print(res.head())
 
         return None
 
