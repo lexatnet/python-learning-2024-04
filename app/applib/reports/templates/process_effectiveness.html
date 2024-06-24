@@ -4,6 +4,22 @@
 {% block main %}
 
     {% for partition in partitions %}
+        {% if partition.type == 'table' %}
+            <table class="table table-striped table-hover">
+                <tbody>
+                    {% for row_index in partition.data.index %}
+                    <tr scope="row">
+                        <td>
+                            {{ row_index }}
+                        </td>
+                        <td>
+                            {{ partition.data[row_index]}} %
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
         
     {% endfor %}
 

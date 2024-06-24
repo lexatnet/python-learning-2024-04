@@ -31,23 +31,12 @@ if Path(args.output).exists():
 
 # Для парсинга .xlsx файлов pandas использует openpyxl. Так что необходимо его установить прописав зависимости
 
-logger.debug("Чтение файла данных...")
-
-from datetime import datetime
-
-start_time = datetime.now()
-data = pd.read_excel(args.input, sheet_name=args.sheet)
-end_time = datetime.now()
-logger.debug(f"заняло {(end_time - start_time).total_seconds()}сек.")
-
-logger.debug("Чтение файла данных завершено")
-
-# label = "Чтение файла данных"
-# with (
-#     logging_section(logger, label=label) as ls,
-#     time_meter_context_manager(logger, label=label) as tmc,
-# ):
-#     data = pd.read_excel(args.input, sheet_name=args.sheet)
+label = "Чтение файла данных"
+with (
+    logging_section(logger, label=label) as ls,
+    time_meter_context_manager(logger, label=label) as tmc,
+):
+    data = pd.read_excel(args.input, sheet_name=args.sheet)
 
 logger.debug("Подготовка данных...")
 prepared_data = time_meter_decorator(logger)(prepare_data)(data)
