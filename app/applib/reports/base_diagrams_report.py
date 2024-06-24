@@ -39,7 +39,7 @@ class BaseDiagramReport(BaseReportWithArtifacts):
         )
 
     def get_context(self):
-        context = dict()
+        context = super().get_context()
 
         context["report_parts"] = [
             self.generate_report_part(diagram_config)

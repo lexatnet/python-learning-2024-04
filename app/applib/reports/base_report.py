@@ -10,11 +10,12 @@ logger = logging.getLogger(__name__)
 class BaseReport(ABC):
     """Базовый класс для всех отчётов"""
 
-    def __init__(self, data: DataFrame, template_name, root_path, index="index.html"):
+    def __init__(self, data: DataFrame, template_name, root_path, index="index.html", common_assets=None):
         self.index = index
         self.src_data = data
         self.template_name = template_name
         self.root_path = root_path
+        self.common_assets=common_assets
 
     @property
     def path(self):
@@ -22,7 +23,10 @@ class BaseReport(ABC):
 
     @abstractmethod
     def get_context(self):
-        pass
+        context = dict()
+        if self.common_assets:
+            context['common_assets'] = self.common_assets.get_context(path=self.root_path)
+        return context
 
     def strip_data_columns(self, columns):
         logger.debug(f"создание нового датафрейма из колонок {columns}")

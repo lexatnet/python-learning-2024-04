@@ -163,7 +163,7 @@ class ProcessEffectiveness(BaseReport):
         return config.handler(**config.params)
 
     def get_context(self):
-        context = dict()
+        context = super().get_context()
         context["partitions"] = [
             self.get_partition_context(partition_config)
             for partition_config in self.report_partitions_configs
