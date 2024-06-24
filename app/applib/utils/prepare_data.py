@@ -2,7 +2,9 @@ import numpy as np
 import pandas as pd
 import logging
 
+
 logger = logging.getLogger(__name__)
+
 
 def prepare_data(data):
     # Желательно удалить неиспользуемые столбцы и строки из датафрейма
@@ -12,12 +14,12 @@ def prepare_data(data):
 
     def my_mapper(column):
         logger.debug(f"переименование колонки {column}")
-        backup_columls = ['index']
-        if column in backup_columls:
-            new_name = f'src_{column}'
+        backup_columns = ["index"]
+        if column in backup_columns:
+            new_name = f"src_{column}"
             logger.debug(f"сохраняем  {column} в {new_name}")
             return new_name
-        
+
         new_name = data1[column][0]
         if pd.notna(new_name) and str(column).startswith("Unnamed"):
             logger.debug(f"найдено имя {new_name}")
@@ -28,10 +30,10 @@ def prepare_data(data):
 
     logger.debug(f"переименованные колонки:\n{data2.head()}")
 
-    # теперь можем удалить неиспользованую строку
+    # теперь можем удалить неиспользованную строку
     data2 = data2.drop(index=[0]).reset_index()
 
-    logger.debug(f"Сбошенный индекс:\n{data2.head()}")
+    logger.debug(f"Сброшенный индекс:\n{data2.head()}")
 
     # Найдём неиспользуемые колонки
     unnamed_columns = list(
@@ -49,8 +51,10 @@ def prepare_data(data):
             logger.debug(f"Колонка {col} пустая, исключаем из данных")
             data2 = data2.drop(columns=[col])
         else:
-            logger.warning(f"Колонка {col} непустая, но неименована. Возможно некорректные исходные данные.")
+            logger.warning(
+                f"Колонка {col} непустая, но неименованная. Возможно некорректные исходные данные."
+            )
 
-    logger.debug(f"Подготовленые исходные данные:\n{data2.head()}")
+    logger.debug(f"Подготовленные исходные данные:\n{data2.head()}")
 
     return data2

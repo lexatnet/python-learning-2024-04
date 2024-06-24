@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"cSpell.words": [
+			"applib",
+			"klass",
+			"notna",
+			"openpyxl",
+			"pytimedelta",
+			"парсинга"
+		],
+		"cSpell.language": "en,ru",
+	}
+}

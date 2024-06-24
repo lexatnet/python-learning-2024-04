@@ -4,9 +4,12 @@ import numpy as np
 import pandas as pd
 from applib.args import args
 from applib.utils import prepare_data
-from applib.reports import create_reports
+from applib.utils.time_meter import time_meter_context_manager, time_meter_decorator
 
-from applib.logging import setup_logger
+from applib.reports import create_reports
+from datetime import datetime
+
+from applib.logging import setup_logger, logging_section
 import logging
 
 setup_logger(level=args.logging_level.to_logging_level())
@@ -15,16 +18,39 @@ logger = logging.getLogger(__name__)
 
 logger.debug("поверка на существование директории куда будут сгенерированы отчёты")
 if Path(args.output).exists():
-    logger.debug("директория назначения сущетсвует")
+    logger.debug("директория назначения существует")
     if args.force:
-        logger.debug("удаляем сущетвующую директорию для генерации новых отчетов в то же место")
+        logger.debug(
+            "удаляем существующую директорию для генерации новых отчетов в то же место"
+        )
         shutil.rmtree(args.output)
     else:
-        raise Exception("Директория указаная в качестве цельевой для генерации отчета уже сущетсвует.")
+        raise Exception(
+            "Директория указанная в качестве целевой для генерации отчета уже существует."
+        )
 
 # Для парсинга .xlsx файлов pandas использует openpyxl. Так что необходимо его установить прописав зависимости
+
+logger.debug("Чтение файла данных...")
+
+from datetime import datetime
+
+start_time = datetime.now()
 data = pd.read_excel(args.input, sheet_name=args.sheet)
-prepared_data = prepare_data(data)
+end_time = datetime.now()
+logger.debug(f"заняло {(end_time - start_time).total_seconds()}сек.")
+
+logger.debug("Чтение файла данных завершено")
+
+# label = "Чтение файла данных"
+# with (
+#     logging_section(logger, label=label) as ls,
+#     time_meter_context_manager(logger, label=label) as tmc,
+# ):
+#     data = pd.read_excel(args.input, sheet_name=args.sheet)
+
+logger.debug("Подготовка данных...")
+prepared_data = time_meter_decorator(logger)(prepare_data)(data)
 
 create_reports(data=prepared_data, destination=args.output)
 

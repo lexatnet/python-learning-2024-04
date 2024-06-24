@@ -4,6 +4,7 @@ from collections import namedtuple
 import pandas as pd
 from datetime import timedelta
 
+
 class DiagramType(StrEnum):
     PIE_FREQUENCY = auto()
 
@@ -63,20 +64,32 @@ class ProcessEffectiveness(BaseReport):
         print(data.head())
 
         def criteria_1(row):
-            if row['Просрочка'].to_pytimedelta() < timedelta(0):
+            if row["Просрочка"].to_pytimedelta() < timedelta(0):
                 return "нет просрочки"
-            elif row['Просрочка'].to_pytimedelta() < timedelta(days=1):
-                return 'день'
-            elif timedelta(days=1) < row['Просрочка'].to_pytimedelta() < timedelta(weeks=1):
-                return 'неделя'
-            elif timedelta(days=7) < row['Просрочка'].to_pytimedelta() < timedelta(days=30):
-                return 'месяц'
+            elif row["Просрочка"].to_pytimedelta() < timedelta(days=1):
+                return "день"
+            elif (
+                timedelta(days=1)
+                < row["Просрочка"].to_pytimedelta()
+                < timedelta(weeks=1)
+            ):
+                return "неделя"
+            elif (
+                timedelta(days=7)
+                < row["Просрочка"].to_pytimedelta()
+                < timedelta(days=30)
+            ):
+                return "месяц"
             return "большая"
 
-        data['Категория Просрочки'] = data.apply(criteria_1, axis='columns')
-        
-        res = data.groupby(by=['Категория Просрочки']).size()
+        data["Категория Просрочки"] = data.apply(criteria_1, axis="columns")
+
+        docs_total_count = data.shape[0]
+
+        res = data.groupby(by=["Категория Просрочки"]).size() # возвращается серия
         print(res.head())
+        res_percent = res / docs_total_count # гернерируется серия
+        print(res_percent.head())
 
         return None
 

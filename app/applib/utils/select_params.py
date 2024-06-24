@@ -18,7 +18,9 @@ def select_params(selected_params):
                 logger.warn(
                     f"обнаружены неопределённые параметры {unused_params} для функции {func.__name__}"
                 )
-            logger.debug(f"выборка параметров {selected_params} для вызова функции")
+            logger.debug(
+                f"выборка параметров {selected_params} для вызова функции {func.__name__}"
+            )
             selected_kwargs = {key: kwargs[key] for key in params}
             return func(*args, **selected_kwargs)
 
