@@ -59,6 +59,6 @@ class CommonAssets:
             return Path(asset_path).relative_to(path, walk_up=True)
 
         return {
-            asset_key: gen_asset_path(asset_path)
+            asset_key: gen_asset_path(asset_key, asset_path)
             for asset_key, asset_path in self.assets.items()
         }

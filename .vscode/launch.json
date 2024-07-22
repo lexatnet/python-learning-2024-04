@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "name": "Python Debugger: app",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": "\"c:\\Users\\user\\Downloads\\Копия Учебные_данные_февраль_апрель_обезличены.xlsx\" \"Лист2\" \"c:\\Users\\user\\Desktop\\report\" --log debug --force"
+        },
+        {
+            "name": "Python Debugger: Python File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}"
+        }
+    ]
+}

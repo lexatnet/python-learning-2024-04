@@ -46,3 +46,4 @@ create_reports(data=prepared_data, destination=args.output)
 # python app.py "/home/aromanov/tmp/Учебные_данные_февраль_апрель_обезличены.xlsx" "Лист2" "/home/aromanov/tmp/reports"
 # python app.py "/home/aromanov/Downloads/Копия Учебные_данные_февраль_апрель_обезличены.xlsx" "Лист2" "/home/aromanov/tmp/reports" --log debug --force
 # python .\app.py "c:\Users\user\Downloads\Учебные_данные_февраль_апрель_обезличены.xlsx" "Лист2" "c:\Users\user\Desktop\report" --log debug --force
+# python .\app.py "c:\Users\user\Downloads\Копия Учебные_данные_февраль_апрель_обезличены.xlsx" "Лист2" "c:\Users\user\Desktop\report" --log debug --force

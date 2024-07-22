@@ -23,7 +23,7 @@ class BaseDiagramReport(BaseReportWithArtifacts):
     @property
     @abstractmethod
     def diagrams_configs(self):
-        """должен возвращать список конфигураций ддл диаграмм"""
+        """должен возвращать список конфигураций для диаграмм"""
         pass
 
     def generate_report_part(self, diagram_config):
